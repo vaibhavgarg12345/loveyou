@@ -9,12 +9,12 @@
 
 body {
     margin: 0;
-    min-height: 100vh;
+    height: 100vh;
     font-family: Arial, sans-serif;
     overflow: hidden;
 }
 
-/* ==== BACKGROUND PHOTOS ==== */
+/* ==== BACKGROUND ==== */
 .bg {
     position: fixed;
     inset: 0;
@@ -39,11 +39,11 @@ body {
 .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(255,192,203,0.6);
+    background: rgba(255,192,203,0.65);
     z-index: 1;
 }
 
-/* QUESTION */
+/* ==== START PAGE ==== */
 .center {
     position: fixed;
     inset: 0;
@@ -57,15 +57,15 @@ body {
 
 .center h1 {
     background: white;
-    padding: 18px 25px;
-    border-radius: 15px;
-    font-size: 22px;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    padding: 25px 30px;
+    border-radius: 18px;
+    font-size: 32px; /* BIGGER TEXT */
+    margin-bottom: 25px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.3);
 }
 
 button {
-    padding: 14px 28px;
+    padding: 14px 30px;
     font-size: 18px;
     border-radius: 12px;
     border: none;
@@ -104,7 +104,7 @@ button {
 <button id="no">No 😐</button>
 
 <script>
-/* RUNNING NO */
+/* NO button runs */
 const noBtn = document.getElementById("no");
 moveNo();
 noBtn.addEventListener("mouseover", moveNo);
@@ -112,14 +112,12 @@ noBtn.addEventListener("touchstart", moveNo);
 
 function moveNo() {
     const pad = 20;
-    noBtn.style.left =
-        Math.random() * (window.innerWidth - noBtn.offsetWidth - pad) + "px";
-    noBtn.style.top =
-        Math.random() * (window.innerHeight - noBtn.offsetHeight - pad) + "px";
+    noBtn.style.left = Math.random() * (window.innerWidth - noBtn.offsetWidth - pad) + "px";
+    noBtn.style.top  = Math.random() * (window.innerHeight - noBtn.offsetHeight - pad) + "px";
 }
 
 /* YES PAGE */
-let songPlayed = false;
+let audioStarted = false;
 
 function yesClick() {
     document.body.innerHTML = `
@@ -139,13 +137,106 @@ function yesClick() {
             .card {
                 background:white;
                 padding:30px;
-                border-radius:20px;
+                border-radius:22px;
                 font-size:20px;
                 color:#c9184a;
                 line-height:1.8;
-                max-width:500px;
-                box-shadow:0 15px 40px rgba(0,0,0,0.3);
+                max-width:520px;
+                box-shadow:0 15px 40px rgba(0,0,0,0.35);
                 z-index:2;
+            }
+
+            .float {
+                position: fixed;
+                bottom: -20px;
+                animation: floatUp linear infinite;
+                cursor: pointer;
+                z-index:1;
+                user-select:none;
+            }
+
+            .name {
+                position: fixed;
+                inset: 0;
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                font-size:42px;
+                font-weight:bold;
+                color:#ff1e56;
+                text-shadow:0 0 25px rgba(255,30,86,0.9);
+                z-index:3;
+                animation: pop 0.6s ease-out;
+                pointer-events:none;
+            }
+
+            @keyframes floatUp {
+                from { transform: translateY(0); opacity:1; }
+                to { transform: translateY(-110vh); opacity:0; }
+            }
+
+            @keyframes pop {
+                from { transform: scale(0.3); opacity:0; }
+                to { transform: scale(1); opacity:1; }
+            }
+        </style>
+
+        <div class="yay">
+            <div class="card">
+                ❤️ Yayyy ❤️<br><br>
+                roshni se teri chand rootha baitha hai<br>
+                maine tujhe manga jab bhi tootta tara dekha hai<br><br>
+                teri jaisi mahak yaha kisi phool me nahi<br>
+                yakeen kar mera mene har bagan dekha hai 💖<br><br>
+                <strong>– Vaibhav ❤️</strong><br><br>
+                <small>(Touch any emoji)</small>
+            </div>
+        </div>
+
+        <audio id="song" loop>
+            <source src="https://raw.githubusercontent.com/vaibhavgarg12345/loveyou/main/Gulabi.mp3" type="audio/mpeg">
+        </audio>
+    `;
+
+    setInterval(createFloating, 230);
+}
+
+/* FLOATING EMOJIS — ANY CLICK WORKS */
+function createFloating() {
+    const emojis = ["❤️","💖","💕","💘","🌹"];
+    const el = document.createElement("div");
+    el.className = "float";
+    el.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+
+    el.style.left = Math.random() * 100 + "vw";
+    el.style.fontSize = (26 + Math.random()*22) + "px"; // BIGGER CLICK AREA
+    el.style.animationDuration = (4 + Math.random()*4) + "s";
+
+    el.addEventListener("click", emojiClicked);
+
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),9000);
+}
+
+function emojiClicked() {
+    // play song once
+    if (!audioStarted) {
+        audioStarted = true;
+        document.getElementById("song").play();
+    }
+
+    // show name EVERY TIME
+    const name = document.createElement("div");
+    name.className = "name";
+    name.innerHTML = "Nirukta Kulshreshth ❤️";
+    document.body.appendChild(name);
+
+    setTimeout(()=>name.remove(),1200);
+}
+</script>
+
+</body>
+</html>                z-index:2;
             }
 
             .float {
