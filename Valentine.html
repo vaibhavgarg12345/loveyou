@@ -5,50 +5,68 @@
 <title>Valentine 💘</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
     min-height: 100vh;
-    font-family: 'Arial', sans-serif;
-    background:
-        linear-gradient(rgba(255,192,203,0.85), rgba(255,192,203,0.85)),
-        url("https://images.unsplash.com/photo-1517841905240-472988babdf9");
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* 4-photo full screen background */
+.bg {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    z-index: 0;
+}
+.bg div {
     background-size: cover;
     background-position: center;
+    filter: brightness(0.75);
+}
+
+.bg1 { background-image: url("https://github.com/vaibhavgarg12345/loveyou/blob/main/IMG_20241107_164658.jpg"); }
+.bg2 { background-image: url("https://images.unsplash.com/photo-1517841905240-472988babdf9"); }
+.bg3 { background-image: url("https://images.unsplash.com/photo-1500648767791-00dcc994a43e"); }
+.bg4 { background-image: url("https://images.unsplash.com/photo-1494790108377-be9c29b29330"); }
+
+/* pink overlay */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255,192,203,0.6);
+    z-index: 1;
+}
+
+/* CENTER QUESTION + YES (FULL FRAME CENTER) */
+.center {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-/* Center card */
-.card {
-    background: white;
-    padding: 30px 25px;
-    border-radius: 20px;
     text-align: center;
-    width: 90%;
-    max-width: 350px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
 }
 
-.card h1 {
+.center h1 {
+    background: white;
+    padding: 20px 25px;
+    border-radius: 15px;
+    margin-bottom: 20px;
     font-size: 22px;
-    margin-bottom: 25px;
-}
-
-/* Buttons */
-.buttons {
-    position: relative;
-    height: 80px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 button {
-    padding: 12px 22px;
-    font-size: 16px;
-    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 18px;
+    border-radius: 12px;
     border: none;
     cursor: pointer;
 }
@@ -58,36 +76,48 @@ button {
     color: white;
 }
 
+/* NO runs across FULL SCREEN */
 #no {
     background: #555;
     color: white;
-    position: absolute;
-    left: 140px;
+    position: fixed;
+    z-index: 3;
 }
 </style>
 </head>
 
 <body>
 
-<div class="card">
-    <h1>Will you be my Valentine? 💖</h1>
-
-    <div class="buttons">
-        <button id="yes" onclick="yesClick()">Yes 😍</button>
-        <button id="no">No 😐</button>
-    </div>
+<div class="bg">
+    <div class="bg1"></div>
+    <div class="bg2"></div>
+    <div class="bg3"></div>
+    <div class="bg4"></div>
 </div>
+
+<div class="overlay"></div>
+
+<div class="center">
+    <h1>Will you be my Valentine? 💖</h1>
+    <button id="yes" onclick="yesClick()">Yes 😍</button>
+</div>
+
+<button id="no">No 😐</button>
 
 <script>
 const noBtn = document.getElementById("no");
 
-noBtn.addEventListener("mouseover", () => {
-    const x = Math.random() * 200;
-    const y = Math.random() * 40;
+moveNo();
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
 
+function moveNo() {
+    const pad = 20;
+    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - pad);
+    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - pad);
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
-});
+}
 
 function yesClick() {
     document.body.innerHTML = `
@@ -101,7 +131,7 @@ function yesClick() {
             font-size:30px;
             color:red;
         ">
-        Yayyy! ❤️🥰<br>You made my day!
+        Yayyy! ❤️🥰<br>You’re my Valentine!
         </div>
     `;
 }
