@@ -59,7 +59,7 @@ button {
 
 <body>
 
-<div class="center" id="start">
+<div class="center">
     <h1>Will you be my Valentine? 💖</h1>
     <button id="yes" onclick="yesClick()">Yes 😍</button>
 </div>
@@ -74,8 +74,8 @@ noBtn.addEventListener("mouseover", moveNo);
 noBtn.addEventListener("touchstart", moveNo);
 
 function moveNo() {
-    noBtn.style.left = Math.random() * (window.innerWidth - 100) + "px";
-    noBtn.style.top  = Math.random() * (window.innerHeight - 60) + "px";
+    noBtn.style.left = Math.random() * (window.innerWidth - 120) + "px";
+    noBtn.style.top  = Math.random() * (window.innerHeight - 80) + "px";
 }
 
 /* ===== YES PAGE ===== */
@@ -106,7 +106,7 @@ function yesClick() {
             /* BIG CLICK AREA */
             .emoji-box {
                 position: fixed;
-                bottom: -80px;
+                bottom: -100px;
                 width: 90px;
                 height: 90px;
                 display:flex;
@@ -146,6 +146,57 @@ function yesClick() {
         </style>
 
         <div class="card">
+            ❤️ Yayyy ❤️<br><br>
+            roshni se teri chand rootha baitha hai<br>
+            maine tujhe manga jab bhi tootta tara dekha hai<br><br>
+            teri jaisi mahak yaha kisi phool me nahi<br>
+            yakeen kar mera mene har bagan dekha hai 💖<br><br>
+            <strong>– Vaibhav ❤️</strong><br><br>
+            <small>(Tap any emoji)</small>
+        </div>
+
+        <audio id="song" loop>
+            <source src="https://raw.githubusercontent.com/vaibhavgarg12345/loveyou/main/Gulabi.mp3" type="audio/mpeg">
+        </audio>
+    `;
+
+    /* MANY emojis, still slow */
+    setInterval(createEmoji, 250);   // 👈 MORE quantity
+}
+
+/* ===== SLOW BUT MANY EMOJIS ===== */
+function createEmoji() {
+    const emojis = ["❤️","💖","💕","💘","🌹"];
+    const box = document.createElement("div");
+    box.className = "emoji-box";
+    box.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+
+    box.style.left = Math.random() * (window.innerWidth - 100) + "px";
+    box.style.animationDuration = (10 + Math.random()*6) + "s"; // slow movement
+
+    box.addEventListener("click", emojiClicked);
+
+    document.body.appendChild(box);
+    setTimeout(()=>box.remove(),18000);
+}
+
+function emojiClicked() {
+    if (!songStarted) {
+        songStarted = true;
+        document.getElementById("song").play();
+    }
+
+    const name = document.createElement("div");
+    name.className = "name";
+    name.innerHTML = "Nirukta Kulshreshth ❤️";
+    document.body.appendChild(name);
+
+    setTimeout(()=>name.remove(),1200);
+}
+</script>
+
+</body>
+</html>        <div class="card">
             ❤️ Yayyy ❤️<br><br>
             roshni se teri chand rootha baitha hai<br>
             maine tujhe manga jab bhi tootta tara dekha hai<br><br>
