@@ -7,14 +7,15 @@
 <style>
 * { box-sizing: border-box; }
 
-body {
+html, body {
     margin: 0;
-    height: 100vh;
-    font-family: Arial, sans-serif;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
+    font-family: Arial, sans-serif;
 }
 
-/* ===== BACKGROUND IMAGES ===== */
+/* ===== BACKGROUND (ALWAYS PRESENT) ===== */
 .bg {
     position: fixed;
     inset: 0;
@@ -36,7 +37,7 @@ body {
 .bg3 { background-image: url("https://raw.githubusercontent.com/vaibhavgarg12345/loveyou/main/IMG_20241107_164658.jpg"); }
 .bg4 { background-image: url("https://raw.githubusercontent.com/vaibhavgarg12345/loveyou/main/Snapchat-1186388236.jpg"); }
 
-/* pink overlay */
+/* overlay */
 .overlay {
     position: fixed;
     inset: 0;
@@ -44,8 +45,8 @@ body {
     z-index: 1;
 }
 
-/* ===== START PAGE ===== */
-.center {
+/* ===== QUESTION PAGE ===== */
+#question {
     position: fixed;
     inset: 0;
     z-index: 2;
@@ -56,13 +57,13 @@ body {
     text-align: center;
 }
 
-.center h1 {
+#question h1 {
     background: white;
-    padding: 28px 34px;
-    border-radius: 22px;
+    padding: 30px 36px;
+    border-radius: 24px;
     font-size: 36px;
     margin-bottom: 25px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.35);
 }
 
 button {
@@ -73,10 +74,7 @@ button {
     cursor: pointer;
 }
 
-#yes {
-    background: #ff4d6d;
-    color: white;
-}
+#yes { background: #ff4d6d; color: white; }
 
 #no {
     background: #555;
@@ -84,12 +82,78 @@ button {
     position: fixed;
     z-index: 5;
 }
+
+/* ===== SECOND PAGE ===== */
+#shayari {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    display: none;
+}
+
+.card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 32px;
+    border-radius: 22px;
+    font-size: 20px;
+    color: #c9184a;
+    line-height: 1.8;
+    max-width: 520px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+    z-index: 3;
+}
+
+/* ===== EMOJIS ===== */
+.emoji {
+    position: fixed;
+    bottom: -100px;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    cursor: pointer;
+    user-select: none;
+    z-index: 2;
+    animation: floatUp linear forwards;
+}
+
+@keyframes floatUp {
+    from { transform: translateY(0); opacity: 1; }
+    to   { transform: translateY(-130vh); opacity: 0; }
+}
+
+.name {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
+    font-weight: bold;
+    color: #ff1e56;
+    text-shadow: 0 0 25px rgba(255,30,86,0.9);
+    z-index: 4;
+    animation: pop 0.5s ease-out;
+    pointer-events: none;
+}
+
+@keyframes pop {
+    from { transform: scale(0.4); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
 </style>
 </head>
 
 <body>
 
-<!-- BACKGROUND (USED FOR BOTH PAGES) -->
+<!-- BACKGROUND -->
 <div class="bg">
     <div class="bg1"></div>
     <div class="bg2"></div>
@@ -98,16 +162,32 @@ button {
 </div>
 <div class="overlay"></div>
 
-<!-- START PAGE -->
-<div class="center" id="startPage">
+<!-- QUESTION -->
+<div id="question">
     <h1>Will you be my Valentine? 💖</h1>
-    <button id="yes" onclick="yesClick()">Yes 😍</button>
+    <button id="yes" onclick="startLove()">Yes 😍</button>
 </div>
 
 <button id="no">No 😐</button>
 
+<!-- SECOND PAGE -->
+<div id="shayari">
+    <div class="card">
+        ❤️ Yayyy ❤️<br><br>
+        roshni se teri chand rootha baitha hai<br>
+        maine tujhe manga jab bhi tootta tara dekha hai<br><br>
+        teri jaisi mahak yaha kisi phool me nahi<br>
+        yakeen kar mera mene har bagan dekha hai 💖<br><br>
+        <strong>– Vaibhav ❤️</strong><br><br>
+        <small>(Tap any emoji)</small>
+    </div>
+</div>
+
+<audio id="song" loop>
+    <source src="https://raw.githubusercontent.com/vaibhavgarg12345/loveyou/main/Gulabi.mp3" type="audio/mpeg">
+</audio>
+
 <script>
-/* NO button runs */
 const noBtn = document.getElementById("no");
 moveNo();
 noBtn.addEventListener("mouseover", moveNo);
@@ -118,51 +198,42 @@ function moveNo() {
     noBtn.style.top  = Math.random() * (window.innerHeight - 80) + "px";
 }
 
-/* ===== YES PAGE ===== */
 let songStarted = false;
 
-function yesClick() {
-    // hide first page elements only (DON'T touch background)
-    document.getElementById("startPage").remove();
-    noBtn.remove();
+function startLove() {
+    document.getElementById("question").style.display = "none";
+    noBtn.style.display = "none";
+    document.getElementById("shayari").style.display = "block";
+    setInterval(createEmoji, 250);
+}
 
-    // add second page content
-    const html = `
-        <style>
-            .card {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background:white;
-                padding:30px;
-                border-radius:22px;
-                font-size:20px;
-                color:#c9184a;
-                line-height:1.8;
-                max-width:520px;
-                text-align:center;
-                box-shadow:0 15px 40px rgba(0,0,0,0.35);
-                z-index:3;
-            }
+function createEmoji() {
+    const emojis = ["❤️","💖","💕","💘","🌹"];
+    const e = document.createElement("div");
+    e.className = "emoji";
+    e.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+    e.style.left = Math.random() * (window.innerWidth - 100) + "px";
+    e.style.animationDuration = (10 + Math.random() * 6) + "s";
 
-            .emoji-box {
-                position: fixed;
-                bottom: -100px;
-                width: 90px;
-                height: 90px;
-                display:flex;
-                justify-content:center;
-                align-items:center;
-                font-size: 42px;
-                cursor: pointer;
-                user-select: none;
-                z-index:2;
-                animation: floatUp linear forwards;
-            }
+    e.onclick = () => {
+        if (!songStarted) {
+            songStarted = true;
+            document.getElementById("song").play();
+        }
+        const name = document.createElement("div");
+        name.className = "name";
+        name.innerHTML = "Nirukta Kulshreshth ❤️";
+        document.body.appendChild(name);
+        setTimeout(() => name.remove(), 1200);
+    };
 
-            @keyframes floatUp {
-                from { transform: translateY(0); opacity:1; }
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), 18000);
+}
+</script>
+
+</body>
+</html>                from { transform: translateY(0); opacity:1; }
                 to { transform: translateY(-130vh); opacity:0; }
             }
 
